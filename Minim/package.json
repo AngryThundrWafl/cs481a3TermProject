@@ -1,8 +1,11 @@
 {
-  "name": "trojan_secret",
+  "name": "minim",
   "version": "0.1.0",
   "private": true,
-  "homepage": "http://www.cs.colostate.edu/cs481a3/public_html/trojan/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AngryThundrWafl/cs481a3TermProject.git"
+  },
   "dependencies": {
     "ganache-cli": "^6.3.0",
     "mocha": "^5.2.0",
