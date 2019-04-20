@@ -2,36 +2,39 @@ pragma solidity ^0.4.25;
 
 contract Minim {
 
-    uint songPrice;
+    struct Song {
+        address owner;
+        uint price;
+    }
 
     uint numSongsRegistered;
     string[] songsRegistered;
-    mapping(string => address) songOwners;
+    mapping(string => Song) songInformation;
 
     mapping(address => uint) numSongsPurchased;
     mapping(address => string[]) songsPurchased;
-
-    constructor() public {
-        songPrice = 0.1 ether;
-        // numSongsRegistered initialized to 0 by default
-    }
 
     function compareStrings(string a, string b) internal pure returns(bool) {
         return keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b));
     }
 
-    function registerSong(string songName) public {
+    function registerSong(string songName, uint price) public {
         require(!compareStrings(songName, ""), "The song name must not be empty");
-        require(songOwners[songName] == address(0), "A song with that name already exists");
+        require(songInformation[songName].owner == address(0), "A song with that name already exists");
         numSongsRegistered++;
         songsRegistered.push(songName);
-        songOwners[songName] = msg.sender;
+        songInformation[songName] = Song(msg.sender, price);
+    }
+
+    function updateSongPrice(string songName, uint newPrice) public {
+        require(songInformation[songName].owner == msg.sender, "You do not own that song");
+        songInformation[songName].price = newPrice;
     }
 
     function purchaseSong(string songName) public payable {
-        require(songOwners[songName] != address(0), "A song with that name does not exist");
-        require(msg.value == songPrice, "Exactly 0.1 ether is required to purchase a song");
-        songOwners[songName].transfer(msg.value);
+        require(songInformation[songName].owner != address(0), "A song with that name does not exist");
+        require(msg.value == songInformation[songName].price, "The amount sent did not match the price of the song with that name");
+        songInformation[songName].owner.transfer(msg.value);
         songsPurchased[msg.sender].push(songName);
         numSongsPurchased[msg.sender] += 1;
     }
@@ -48,6 +51,11 @@ contract Minim {
     function getSongsPurchasedByIndex(uint index) public view returns(string) {
         require(index >= 0 && index < numSongsPurchased[msg.sender], "Invalid index");
         return songsPurchased[msg.sender][index];
+    }
+
+    function getSongPrice(string songName) public view returns(uint) {
+        require(songInformation[songName].owner != address(0), "A song with that name does not exist");
+        return songInformation[songName].price;
     }
 
 }
