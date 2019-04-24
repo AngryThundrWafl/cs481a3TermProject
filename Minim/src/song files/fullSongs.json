@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Bordem",
+    "singer": "Tyler The Creator",
+    "cover": "https://res.cloudinary.com/angrythundrwafl/image/upload/v1554430820/Minim%20Library/Cover%20Art/DEEg9ZmUIAAcdEb.jpg",
+    "musicSrc": "https://res.cloudinary.com/angrythundrwafl/video/upload/v1554430881/Minim%20Library/Music/08_Tyler_The_Creator_-_Boredom.mp3",
+    "duration": "5:20",
+    "price": ".0000097"
+  },
+  {
+    "name": "Rush Hour",
+    "singer": "Mac Miller",
+    "cover": "https://res.cloudinary.com/angrythundrwafl/image/upload/v1554431255/Minim%20Library/Cover%20Art/cover.jpg",
+    "musicSrc": "https://res.cloudinary.com/angrythundrwafl/video/upload/v1554431252/Minim%20Library/Music/03._Rush_Hour.mp3",
+    "duration": "3:22",
+    "price": ".0000099"
+  }
+]

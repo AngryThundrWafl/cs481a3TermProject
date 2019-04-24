@@ -4,6 +4,11 @@ contract Minim {
 
     struct Song {
         address owner;
+        string songName;
+        string artistName;
+        string coverArt;
+        string musicSource;
+        string duration;
         uint price;
     }
 
@@ -18,12 +23,12 @@ contract Minim {
         return keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b));
     }
 
-    function registerSong(string songName, uint price) public {
+    function registerSong(string songName,string artistName,string coverArt, string musicSource, string duration, uint price) public {
         require(!compareStrings(songName, ""), "The song name must not be empty");
         require(songInformation[songName].owner == address(0), "A song with that name already exists");
         numSongsRegistered++;
         songsRegistered.push(songName);
-        songInformation[songName] = Song(msg.sender, price);
+        songInformation[songName] = Song(msg.sender, songName, artistName, coverArt, musicSource, duration, price);
     }
 
     function updateSongPrice(string songName, uint newPrice) public {
@@ -58,4 +63,7 @@ contract Minim {
         return songInformation[songName].price;
     }
 
+    function getNumSongsRegistered() public view returns(uint) {
+        return numSongsRegistered;
+    }
 }
