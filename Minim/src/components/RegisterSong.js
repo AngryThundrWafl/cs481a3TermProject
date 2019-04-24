@@ -29,7 +29,13 @@ export default class Register extends Component {
         try {
             const accounts = await web3.eth.getAccounts();
             await Minim.methods
-                .registerSong(this.state.songName,this.state.artistName,this.state.coverURL,this.state.sourceURL,this.state.duration,this.state.price)
+                .registerSong(
+                    this.state.songName,
+                    this.state.artistName,
+                    this.state.coverURL,
+                    this.state.sourceURL,
+                    this.state.duration,
+                    web3.utils.toWei(this.state.price, 'ether'))
                 .send({
                     from: accounts[0]
                 });
@@ -107,7 +113,7 @@ export default class Register extends Component {
                             }
                         />
 
-                        <label style={labelStyle}>Price (In Etherium)</label>
+                        <label style={labelStyle}>Price (In Ethereum)</label>
                         <input
                             placeholder="##.####"
                             onChange={event =>
