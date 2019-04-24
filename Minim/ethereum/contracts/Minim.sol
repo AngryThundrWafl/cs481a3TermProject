@@ -45,7 +45,7 @@ contract Minim {
     }
 
     function getSongsRegisteredByIndex(uint index) public view returns(string) {
-        require(index >= 0 && index < numSongsPurchased[msg.sender], "Invalid index");
+        require(index >= 0 && index < numSongsRegistered, "Invalid index");
         return songsRegistered[index];
     }
 
