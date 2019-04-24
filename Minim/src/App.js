@@ -9,52 +9,21 @@ import {
     NavbarBrand,
     Nav,
     NavItem,
+    Button,
     NavLink} from 'reactstrap';
 import MusicPlayer from "./components/MusicPlayer";
 import MusicList from "./components/MusicList";
+import Register from "./components/RegisterSong";
+
 import "./styles/react-tabs.css";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 
 
 //AudioLists for preview and full songs
-const previewAudioList = [
-    {
-        name: "Bordem",
-        singer: "Tyler The Creator",
-        cover: "https://res.cloudinary.com/angrythundrwafl/image/upload/v1554430820/Minim%20Library/Cover%20Art/DEEg9ZmUIAAcdEb.jpg",
-        musicSrc: "https://res.cloudinary.com/angrythundrwafl/video/upload/v1554436480/Minim%20Library/Music%20Preview/08_Tyler_The_Creator_-_Boredom-Preview.mp3",
-        duration: "5:20",
-        price: ".0000097",
-    },
-    {
-        name: "Rush Hour",
-        singer: "Mac Miller",
-        cover: "https://res.cloudinary.com/angrythundrwafl/image/upload/v1554431255/Minim%20Library/Cover%20Art/cover.jpg",
-        musicSrc: "https://res.cloudinary.com/angrythundrwafl/video/upload/v1554436475/Minim%20Library/Music%20Preview/03._Rush_Hour-Preview.mp3",
-        duration: "3:22",
-        price: ".0000099",
-    }
-];
+const previewAudioList = require('./song files/previewSongs.json');
 
-const fullAudioList = [
-    {
-        name: "Bordem",
-        singer: "Tyler The Creator",
-        cover: "https://res.cloudinary.com/angrythundrwafl/image/upload/v1554430820/Minim%20Library/Cover%20Art/DEEg9ZmUIAAcdEb.jpg",
-        musicSrc: "https://res.cloudinary.com/angrythundrwafl/video/upload/v1554430881/Minim%20Library/Music/08_Tyler_The_Creator_-_Boredom.mp3",
-        duration: "5:20",
-        price: ".0000097",
-    },
-    {
-        name: "Rush Hour",
-        singer: "Mac Miller",
-        cover: "https://res.cloudinary.com/angrythundrwafl/image/upload/v1554431255/Minim%20Library/Cover%20Art/cover.jpg",
-        musicSrc: "https://res.cloudinary.com/angrythundrwafl/video/upload/v1554431252/Minim%20Library/Music/03._Rush_Hour.mp3",
-        duration: "3:22",
-        price: ".0000099",
-    }
-];
+const fullAudioList = require('./song files/fullSongs.json');
 
 
 class App extends Component {
@@ -71,18 +40,14 @@ class App extends Component {
     }
 
 
+
   handleSelect(){
       this.setState({isAvailable:!this.state.isAvailable});
   }
 
 
   buySong(index){
-       let boughtSong =  this.state.boughtSong;
-       //todo solidity code for purchasing music
-
-      //todo
-       boughtSong[index] = true;
-       this.setState({boughtSong})
+    //todo
   }
 
   getAccount = async () =>{
@@ -97,8 +62,10 @@ class App extends Component {
 
   };
 
+
   render() {
       this.getAccount();
+
         return (
         <div style={{
             backgroundColor: "rgb(0, 13, 26)",
@@ -111,10 +78,10 @@ class App extends Component {
                 <Nav className="mr-auto">
                     <NavLink href="#home" style={{color: 'white', textDecoration: 'none'}}>Home</NavLink>
                     <NavLink href="#nav2" style={{color: 'white', textDecoration: 'none'}}>nav2</NavLink>
-                    <NavLink href="#nav3" style={{color: 'white', textDecoration: 'none'}}>nav3</NavLink>
+                    <NavLink href="#nav2" style={{color: 'white', textDecoration: 'none'}}>nav3</NavLink>
                 </Nav>
                 <Nav>
-                    <NavItem><p style={{color: "rgb(49, 194, 124)"}}>Account:{this.state.account}</p></NavItem>
+                    <NavItem><p style={{color: "rgb(49, 194, 124)"}}>Account: {this.state.account}</p></NavItem>
                 </Nav>
             </Navbar>
             <br />
@@ -132,6 +99,7 @@ class App extends Component {
                     <TabList>
                         <Tab>Catalog</Tab>
                         <Tab>My Music</Tab>
+                        <Tab>Register Song</Tab>
                     </TabList>
 
                     <TabPanel>
@@ -141,6 +109,9 @@ class App extends Component {
                     <TabPanel>
                         <h2>My Music Panel</h2>
                         <MusicList buySong={this.buySong} fullAudioList={fullAudioList} previewAudioList={previewAudioList} isAvailable={this.state.isAvailable} boughtSong={this.state.boughtSong}/>
+                    </TabPanel>
+                    <TabPanel>
+                        <Register/>
                     </TabPanel>
                 </Tabs>
             </Card>
