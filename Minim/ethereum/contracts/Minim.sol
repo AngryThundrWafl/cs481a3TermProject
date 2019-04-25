@@ -9,7 +9,7 @@ contract Minim {
         string coverArt;
         string musicSource;
         string duration;
-        uint price;
+        uint price; // in wei
     }
 
     uint numSongsRegistered;
