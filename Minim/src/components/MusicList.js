@@ -47,7 +47,7 @@ export default class MusicList extends Component {
         let tableBody = this.buildtable();
         return (
             <div>
-                <Table dark stripped hover borderless
+                <Table dark stripped={"true"} hover borderless
                     style={{
                         backgroundColor: "rgba(0,0,0, .3)"
                     }}
