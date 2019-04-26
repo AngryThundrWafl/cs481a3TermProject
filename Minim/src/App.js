@@ -19,7 +19,6 @@ import "./styles/react-tabs.css";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 
-
 //AudioLists for preview and full songs
 const previewAudioList = require('./song files/previewSongs.json');
 
@@ -32,6 +31,7 @@ class App extends Component {
         this.handleSelect = this.handleSelect.bind(this);
         this.buySong = this.buySong.bind(this);
         this.getAccount = this.getAccount.bind(this);
+        this.uploadSong = this.uploadSong.bind(this);
         this.state = {
             boughtSong: [false, true],
             isAvailable: true,
@@ -50,6 +50,10 @@ class App extends Component {
     //todo
   }
 
+  uploadSong(){
+
+  }
+
   getAccount = async () =>{
         //gets current account
         const account = await web3.eth.getAccounts();
@@ -64,6 +68,7 @@ class App extends Component {
 
 
   render() {
+      //get ethereum account and display their information
       this.getAccount();
 
         return (

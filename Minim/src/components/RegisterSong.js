@@ -3,18 +3,24 @@ import { Button, Header, Icon, Modal, Form, Message } from "semantic-ui-react";
 import web3 from "../web3";
 import Minim from "../Minim";
 
+let myWidget;
+
 export default class Register extends Component {
-    state = {
-        songName:"",
-        artistName:"",
-        coverURL: "",
-        sourceURL:"",
-        duration: "",
-        price: 0,
-        message: "",
-        errorMessage: "",
-        loading: false
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            songName:"",
+            artistName:"",
+            coverURL: "",
+            sourceURL:"",
+            duration: "",
+            price: 0,
+            message: "",
+            errorMessage: "",
+            loading: false,
+        };
+    }
+
 
 
     onSubmit = async event => {
@@ -26,6 +32,7 @@ export default class Register extends Component {
             errorMessage: "",
             message: "waiting for blockchain transaction to complete..."
         });
+        console.log(this.state.songName)
         try {
             const accounts = await web3.eth.getAccounts();
             await Minim.methods
@@ -53,11 +60,70 @@ export default class Register extends Component {
     };
 
 
+    //waits until componenet is mounted to show widget
+    componentWillMount() {
+        myWidget = window.cloudinary.createUploadWidget({
+            cloudName: "angrythundrwafl",
+            uploadPreset: "xn4enrfo",
+            sources: [
+                "local",
+                "url"
+            ],
+            folder:"/Minim Library/Music/",
+            multiple: false,
+            defaultSource: "local",
+            styles: {
+                palette: {
+                    window: "#000D1A",
+                    windowBorder: "#000D1A",
+                    tabIcon: "#31C27C",
+                    menuIcons: "#5A616A",
+                    textDark: "#000000",
+                    textLight: "#FFFFFF",
+                    link: "#31C27C",
+                    action: "#FF620C",
+                    inactiveTabIcon: "#3B7358",
+                    error: "#F44235",
+                    inProgress: "#31C27C",
+                    complete: "#20B832",
+                    sourceBg: "#E4EBF1"
+                },
+                fonts: {
+                    default: {
+                        active: true
+                    }
+                }
+            }
+        },(error, result) => {
+                if (!error && result && result.event === "success") {
+                    console.log('Done! Here is the file info: ', result.info);
+                    let url = result.info.url;
+                    //todo update json files with new songs added
+                    //let rawdata = fs.readFileSync('../song files/fullSongs.json');
+                    //let songList = JSON.parse(rawdata);
+                    let newSong = {
+                        name : this.state.songName,
+                        singer: this.state.artistName,
+                        cover: this.state.coverURL,
+                        musicSrc: result.info.url,
+                        duration: this.state.duration,
+                        price: this.state.price,
+                    };
+                    //songList.push(newSong);
+                    //console.log(songList)
+                    //todo
+                }
+            }
+        );
+    }
+
+
 
     render() {
         const labelStyle = {
             color: "white"
         };
+
 
         return (
             <div style = {{display: 'block', justifyContent:'center'}} >
@@ -123,12 +189,14 @@ export default class Register extends Component {
                             }
                         />
                     </Form.Field>
-
                     <Message error header="Oops!" content={this.state.errorMessage} />
                     <Button primary type="submit" loading={this.state.loading}>
                         <Icon name="check" />
                         Register Song
                     </Button>
+                    <Button  type='button' id="upload_widget" style={{backgroundColor:"rgb(49, 194, 124)"}}  onClick={function () {
+                        myWidget.open();
+                    }}>Upload files</Button>
                     <hr />
                     <h2>{this.state.message}</h2>
                 </Form>
