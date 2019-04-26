@@ -12,7 +12,7 @@ contract Minim {
         uint price; // in wei
     }
 
-    uint numSongsRegistered;
+    uint public numSongsRegistered;
     string[] songsRegistered;
     mapping(string => Song) songInformation;
 
@@ -23,7 +23,7 @@ contract Minim {
         return keccak256(abi.encodePacked(a)) == keccak256(abi.encodePacked(b));
     }
 
-    function registerSong(string songName,string artistName,string coverArt, string musicSource, string duration, uint price) public {
+    function registerSong(string songName, string artistName, string coverArt, string musicSource, string duration, uint price) public {
         require(!compareStrings(songName, ""), "The song name must not be empty");
         require(songInformation[songName].owner == address(0), "A song with that name already exists");
         numSongsRegistered++;
@@ -44,9 +44,19 @@ contract Minim {
         numSongsPurchased[msg.sender] += 1;
     }
 
-    function getSongsRegisteredByIndex(uint index) public view returns(string) {
+    function getSongsRegisteredByIndex(uint index) public view returns(address, string, string, string, string, string, uint) {
         require(index >= 0 && index < numSongsRegistered, "Invalid index");
-        return songsRegistered[index];
+        string storage songName = songsRegistered[index];
+
+        return (
+            songInformation[songName].owner,
+            songInformation[songName].songName,
+            songInformation[songName].artistName,
+            songInformation[songName].coverArt,
+            songInformation[songName].musicSource,
+            songInformation[songName].duration,
+            songInformation[songName].price
+        );
     }
 
     function getNumSongsPurchased() public view returns(uint) {
@@ -56,14 +66,5 @@ contract Minim {
     function getSongsPurchasedByIndex(uint index) public view returns(string) {
         require(index >= 0 && index < numSongsPurchased[msg.sender], "Invalid index");
         return songsPurchased[msg.sender][index];
-    }
-
-    function getSongPrice(string songName) public view returns(uint) {
-        require(songInformation[songName].owner != address(0), "A song with that name does not exist");
-        return songInformation[songName].price;
-    }
-
-    function getNumSongsRegistered() public view returns(uint) {
-        return numSongsRegistered;
     }
 }
