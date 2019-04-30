@@ -1,7 +1,4 @@
 import React, { Component } from "react";
-import web3 from "../web3";
-import Minim from "../Minim.js";
-import { Container, Card } from "semantic-ui-react";
 import { Button,Table } from 'reactstrap';
 
 export default class MusicList extends Component {
@@ -26,10 +23,10 @@ export default class MusicList extends Component {
             else if(this.props.boughtSong[i] === false && this.props.isAvailable === true){
                 tableBody.push(
                     <tr>
-                        <td>{this.props.previewAudioList[i].singer}</td>
-                        <td>{this.props.previewAudioList[i].name}</td>
-                        <td>{this.props.previewAudioList[i].duration}</td>
-                        <td>{this.props.previewAudioList[i].price}</td>
+                        <td>{this.props.fullAudioList[i].singer}</td>
+                        <td>{this.props.fullAudioList[i].name}</td>
+                        <td>{this.props.fullAudioList[i].duration}</td>
+                        <td>{this.props.fullAudioList[i].price}</td>
                         <td><Button color="white" style={{backgroundColor:"rgb(49, 194, 124)"}} onClick={() => this.props.buySong(i)}>Buy</Button></td>
                     </tr>
                 );
