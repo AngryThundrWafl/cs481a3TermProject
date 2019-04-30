@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import { Button,Table } from 'reactstrap';
+import web3 from "../web3";
+import MusicPlayer from "./MusicPlayer";
+import { Button, Table } from "reactstrap";
 
 export default class MusicList extends Component {
     constructor(props) {
@@ -7,57 +9,71 @@ export default class MusicList extends Component {
         this.buildtable = this.buildtable.bind(this);
     }
 
-    buildtable(){
+    buildtable() {
         let tableBody = [];
-        let coverFound = false;
-        for(let i = 0; i < 2; i++){
-            if(this.props.boughtSong[i] === true && this.props.isAvailable === false){
+
+        for (let i = 0; i < this.props.songList.length; i++) {
+            let currentSong = this.props.songList[i];
+
+            if (this.props.songsArePreviews) {
                 tableBody.push(
-                    <tr>
-                        <td>{this.props.fullAudioList[i].singer}</td>
-                        <td>{this.props.fullAudioList[i].name}</td>
-                        <td>{this.props.fullAudioList[i].duration}</td>
+                    <tr key={"previewTableRow" + i}>
+                        <td>{currentSong.singer}</td>
+                        <td>{currentSong.name}</td>
+                        <td>{currentSong.duration}</td>
+                        <td>{web3.utils.fromWei(currentSong.price.toString(), "ether")}</td>
+                        <td>
+                            <Button
+                                color="white"
+                                style={{ backgroundColor: "rgb(49, 194, 124)" }}
+                                disabled={currentSong.purchased}
+                                onClick={() => this.props.buySong(currentSong)}
+                            >
+                                Buy
+                            </Button>
+                        </td>
                     </tr>
                 );
-            }//if song isn't bought we add song to preview playlist
-            else if(this.props.boughtSong[i] === false && this.props.isAvailable === true){
-                tableBody.push(
-                    <tr>
-                        <td>{this.props.fullAudioList[i].singer}</td>
-                        <td>{this.props.fullAudioList[i].name}</td>
-                        <td>{this.props.fullAudioList[i].duration}</td>
-                        <td>{this.props.fullAudioList[i].price}</td>
-                        <td><Button color="white" style={{backgroundColor:"rgb(49, 194, 124)"}} onClick={() => this.props.buySong(i)}>Buy</Button></td>
-                    </tr>
-                );
+            } else {
+                if (currentSong.purchased) {
+                    tableBody.push(
+                        <tr key={"purchasedTableRow" + i}>
+                            <td>{currentSong.singer}</td>
+                            <td>{currentSong.name}</td>
+                            <td>{currentSong.duration}</td>
+                        </tr>
+                    );
+                }
             }
         }
+
         return tableBody;
     }
 
     render() {
-        let tableHead = [<th>Artist</th>,<th>Title</th>,<th>Duration</th>];
-        if(this.props.isAvailable === true){
-            tableHead.push(<th>Price</th>);
-            tableHead.push(<th>Purchase</th>)
+        let tableHead = [<th key="thArtist">Artist</th>, <th key="thTitle">Title</th>, <th key="thDuration">Duration</th>];
+        if (this.props.songsArePreviews) {
+            tableHead.push(<th key="thPrice">Price (Ether)</th>);
+            tableHead.push(<th key="thPurchase">Purchase</th>)
         }
         let tableBody = this.buildtable();
         return (
             <div>
                 <Table dark stripped={"true"} hover borderless
                     style={{
-                        backgroundColor: "rgba(0,0,0, .3)"
+                        backgroundColor: "rgba(0, 0, 0, .3)"
                     }}
                 >
                     <thead>
-                    <tr>
-                        {tableHead}
-                    </tr>
+                        <tr>
+                            {tableHead}
+                        </tr>
                     </thead>
                     <tbody>
-                    {tableBody}
+                        {tableBody}
                     </tbody>
                 </Table>
+                <MusicPlayer songList={this.props.songList} songsArePreviews={this.props.songsArePreviews} />
             </div>
         );
     }

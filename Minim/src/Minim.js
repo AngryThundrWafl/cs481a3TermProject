@@ -1,6 +1,6 @@
 import web3 from "./web3";
 
-const address = "0x1daf37d3dda022519759dddbf6b3761bf7b150f6";
+const address = "0x9eACA3d473ED03101444eEd83279AC2e9a7cD2f3";
 
 const abi = [
     {
@@ -35,6 +35,20 @@ const abi = [
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "numSongsRegistered",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -86,7 +100,31 @@ const abi = [
         "outputs": [
             {
                 "name": "",
+                "type": "address"
+            },
+            {
+                "name": "",
                 "type": "string"
+            },
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "uint256"
             }
         ],
         "payable": false,
@@ -119,39 +157,6 @@ const abi = [
         "outputs": [],
         "payable": true,
         "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "songName",
-                "type": "string"
-            }
-        ],
-        "name": "getSongPrice",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [],
-        "name": "getNumSongsRegistered",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
         "type": "function"
     }
 ];
