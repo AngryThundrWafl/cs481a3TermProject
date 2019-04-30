@@ -9,8 +9,8 @@ console.log("Copy this ABI into the ABI json variable in file trojanSecret.js");
 
 
 const provider = new HDWalletProvider(
-  "your twelve word metamask secret",
-  "https://rinkeby.infura.io/ your account for infura"
+  "expose scare soft swim turtle indoor need idea load scissors steel rotate",
+  "https://rinkeby.infura.io/v3/d02fc78121d3408787f5e8e3dfdfd802"
 );
 
 const web3 = new Web3(provider);
