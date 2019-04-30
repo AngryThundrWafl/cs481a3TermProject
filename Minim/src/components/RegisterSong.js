@@ -1,9 +1,47 @@
 import React, { Component } from "react";
-import { Button, Header, Icon, Modal, Form, Message } from "semantic-ui-react";
+import { Button,Icon, Form, Message } from "semantic-ui-react";
 import web3 from "../web3";
 import Minim from "../Minim";
+import { Container } from "semantic-ui-react";
 
-let myWidget;
+let musicUpload, coverUpload;
+
+const uploadOptions ={
+    cloudName: "angrythundrwafl",
+    uploadPreset: "xn4enrfo",
+    sources: [
+        "local",
+        "url"
+    ],
+    folder:"/Minim Library/Music/",
+    multiple: false,
+    defaultSource: "local",
+    maxFiles: 1,
+    showPoweredBy: false,
+
+    styles: {
+        palette: {
+            window: "#000D1A",
+            windowBorder: "#000D1A",
+            tabIcon: "#31C27C",
+            menuIcons: "#5A616A",
+            textDark: "#000000",
+            textLight: "#FFFFFF",
+            link: "#31C27C",
+            action: "#FF620C",
+            inactiveTabIcon: "#3B7358",
+            error: "#F44235",
+            inProgress: "#31C27C",
+            complete: "#20B832",
+            sourceBg: "#E4EBF1"
+        },
+        fonts: {
+            default: {
+                active: true
+            }
+        }
+    }
+};
 
 export default class Register extends Component {
     constructor(props) {
@@ -18,8 +56,13 @@ export default class Register extends Component {
             message: "",
             errorMessage: "",
             loading: false,
+            shown: true,
+            songUploaded: false,
+            coverUploaded: false,
         };
     }
+
+
 
 
 
@@ -32,7 +75,7 @@ export default class Register extends Component {
             errorMessage: "",
             message: "waiting for blockchain transaction to complete..."
         });
-        console.log(this.state.songName)
+        console.log(this.state.songName);
         try {
             const accounts = await web3.eth.getAccounts();
             await Minim.methods
@@ -62,61 +105,46 @@ export default class Register extends Component {
 
     //waits until componenet is mounted to show widget
     componentWillMount() {
-        myWidget = window.cloudinary.createUploadWidget({
-            cloudName: "angrythundrwafl",
-            uploadPreset: "xn4enrfo",
-            sources: [
-                "local",
-                "url"
-            ],
-            folder:"/Minim Library/Music/",
-            multiple: false,
-            defaultSource: "local",
-            styles: {
-                palette: {
-                    window: "#000D1A",
-                    windowBorder: "#000D1A",
-                    tabIcon: "#31C27C",
-                    menuIcons: "#5A616A",
-                    textDark: "#000000",
-                    textLight: "#FFFFFF",
-                    link: "#31C27C",
-                    action: "#FF620C",
-                    inactiveTabIcon: "#3B7358",
-                    error: "#F44235",
-                    inProgress: "#31C27C",
-                    complete: "#20B832",
-                    sourceBg: "#E4EBF1"
-                },
-                fonts: {
-                    default: {
-                        active: true
+        musicUpload = window.cloudinary.createUploadWidget(uploadOptions,(error, result) => {
+                if (!error && result && result.event === "success") {
+                    console.log('Done! Here is the file info: ', result.info);
+                    console.log('Results Json ',result);
+                    //let url = result.info.public_id;
+                    let url = result.info.url;
+                    this.setState({sourceURL: url});
+                    this.setState({
+                        songUploaded: true
+                    });
+                    if(this.state.songUploaded === true && this.state.coverUploaded === true){
+                        this.setState({
+                            shown: !this.state.shown
+                        })
                     }
                 }
             }
-        },(error, result) => {
+        );
+
+
+        let coverOptions = uploadOptions;
+        coverOptions.folder = "/Minim Library/Cover Art/";
+        coverUpload = window.cloudinary.createUploadWidget(uploadOptions,(error, result) => {
                 if (!error && result && result.event === "success") {
                     console.log('Done! Here is the file info: ', result.info);
+                    //let url = result.info.public_id;
                     let url = result.info.url;
-                    //todo update json files with new songs added
-                    //let rawdata = fs.readFileSync('../song files/fullSongs.json');
-                    //let songList = JSON.parse(rawdata);
-                    let newSong = {
-                        name : this.state.songName,
-                        singer: this.state.artistName,
-                        cover: this.state.coverURL,
-                        musicSrc: result.info.url,
-                        duration: this.state.duration,
-                        price: this.state.price,
-                    };
-                    //songList.push(newSong);
-                    //console.log(songList)
-                    //todo
+                    this.setState({coverURL: url});
+                    this.setState({
+                        coverUploaded: true
+                    });
+                    if(this.state.songUploaded === true && this.state.coverUploaded === true){
+                        this.setState({
+                            shown: !this.state.shown
+                        })
+                    }
                 }
             }
         );
     }
-
 
 
     render() {
@@ -124,11 +152,26 @@ export default class Register extends Component {
             color: "white"
         };
 
+        let hidden = {
+            display: this.state.shown ? "none" : "block"
+        };
 
         return (
             <div style = {{display: 'block', justifyContent:'center'}} >
+                <Container>
+                <img
+                    src={this.state.coverURL}
+                    alt="new"
+                    style={{
+                        display: this.state.shown ? "none" : "block",
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        width: '50%',
+                    }}
+                />
+                <br style={hidden} />
                 <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
-                    <Form.Field>
+                    <Form.Field style={hidden}>
                         <label style={labelStyle}>Song Name</label>
                         <input
                             placeholder="Song Name"
@@ -145,26 +188,6 @@ export default class Register extends Component {
                             onChange={event =>
                                 this.setState({
                                     artistName: event.target.value
-                                })
-                            }
-                        />
-
-                        <label style={labelStyle}>Cover Art URL</label>
-                        <input
-                            placeholder="Https://yourURL.com"
-                            onChange={event =>
-                                this.setState({
-                                    coverURL: event.target.value
-                                })
-                            }
-                        />
-
-                        <label style={labelStyle}>Music Source URL</label>
-                        <input
-                            placeholder="Https://yourURL.com"
-                            onChange={event =>
-                                this.setState({
-                                    musicURL: event.target.value
                                 })
                             }
                         />
@@ -189,17 +212,24 @@ export default class Register extends Component {
                             }
                         />
                     </Form.Field>
+                    <br style={hidden} />
                     <Message error header="Oops!" content={this.state.errorMessage} />
-                    <Button primary type="submit" loading={this.state.loading}>
+                    <Button style={hidden} primary type="submit" loading={this.state.loading}>
                         <Icon name="check" />
                         Register Song
                     </Button>
+                    <br style={hidden} />
+                    <h5 style={{display: !this.state.shown ? "none" : "block"}}>Upload a song first then populate fields to register your song.</h5>
                     <Button  type='button' id="upload_widget" style={{backgroundColor:"rgb(49, 194, 124)"}}  onClick={function () {
-                        myWidget.open();
-                    }}>Upload files</Button>
+                        musicUpload.open();
+                    }}>Upload Song</Button>
+                    <Button type='button' id="upload_widget" style={{backgroundColor:"rgb(49, 194, 124)"}}  onClick={function () {
+                        coverUpload.open();
+                    }}>Upload Cover</Button>
                     <hr />
                     <h2>{this.state.message}</h2>
                 </Form>
+                </Container>
             </div>
         );
     }
