@@ -5,11 +5,9 @@ import { Container } from "semantic-ui-react";
 import {
     Card,
     Navbar,
-    NavbarToggler,
     NavbarBrand,
     Nav,
     NavItem,
-    Button,
     NavLink} from 'reactstrap';
 import MusicPlayer from "./components/MusicPlayer";
 import MusicList from "./components/MusicList";
@@ -19,8 +17,6 @@ import "./styles/react-tabs.css";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 
-//AudioLists for preview and full songs
-const previewAudioList = require('./song files/previewSongs.json');
 
 const fullAudioList = require('./song files/fullSongs.json');
 
@@ -30,19 +26,19 @@ class App extends Component {
         super(props);
         this.handleSelect = this.handleSelect.bind(this);
         this.buySong = this.buySong.bind(this);
-        this.getAccount = this.getAccount.bind(this);
         this.uploadSong = this.uploadSong.bind(this);
         this.state = {
             boughtSong: [false, true],
             isAvailable: true,
             account: "",
+            catalog: "",
         };
     }
 
 
 
-  handleSelect(){
-      this.setState({isAvailable:!this.state.isAvailable});
+  handleSelect(index){
+      this.setState({isAvailable:index!==1});
   }
 
 
@@ -66,6 +62,11 @@ class App extends Component {
 
   };
 
+  getCatalog(){
+      //todo get all the songs from the contract
+
+      //todo update current state of the contract
+  }
 
   render() {
       //get ethereum account and display their information
@@ -74,7 +75,7 @@ class App extends Component {
         return (
         <div style={{
             backgroundColor: "rgb(0, 13, 26)",
-            height: "100vh",
+            height: "100%",
         }}>
             <Navbar style={{
                 backgroundColor: "rgba(0,0,0, .4)"
@@ -82,8 +83,6 @@ class App extends Component {
                 <NavbarBrand href="#home" style={{color: "rgb(49, 194, 124)"}}>Minim: BlockChain Music Application</NavbarBrand>
                 <Nav className="mr-auto">
                     <NavLink href="#home" style={{color: 'white', textDecoration: 'none'}}>Home</NavLink>
-                    <NavLink href="#nav2" style={{color: 'white', textDecoration: 'none'}}>nav2</NavLink>
-                    <NavLink href="#nav2" style={{color: 'white', textDecoration: 'none'}}>nav3</NavLink>
                 </Nav>
                 <Nav>
                     <NavItem><p style={{color: "rgb(49, 194, 124)"}}>Account: {this.state.account}</p></NavItem>
@@ -91,16 +90,18 @@ class App extends Component {
             </Navbar>
             <br />
             <Container style={{
-                height: "100vh"
+                height: "90vh",
+                overflow: 'auto'
             }}>
             <Card style={{
-                height:"86%",
+                height:"90%",
                 width:"95%",
                 backgroundColor: "rgba(0,0,0, .4)",
                 color: "white",
                 borderColor: "rgb(49, 194, 124)",
+                overflow: 'auto'
             }}>
-                <Tabs onSelect={this.handleSelect}>
+                <Tabs onSelect={this.handleSelect} >
                     <TabList>
                         <Tab>Catalog</Tab>
                         <Tab>My Music</Tab>
@@ -109,11 +110,11 @@ class App extends Component {
 
                     <TabPanel>
                         <h2>Buy Music Panel</h2>
-                        <MusicList buySong={this.buySong} fullAudioList={fullAudioList} previewAudioList={previewAudioList} isAvailable={this.state.isAvailable} boughtSong={this.state.boughtSong}/>
+                        <MusicList buySong={this.buySong} fullAudioList={fullAudioList} isAvailable={this.state.isAvailable} boughtSong={this.state.boughtSong}/>
                     </TabPanel>
                     <TabPanel>
                         <h2>My Music Panel</h2>
-                        <MusicList buySong={this.buySong} fullAudioList={fullAudioList} previewAudioList={previewAudioList} isAvailable={this.state.isAvailable} boughtSong={this.state.boughtSong}/>
+                        <MusicList buySong={this.buySong} fullAudioList={fullAudioList} isAvailable={this.state.isAvailable} boughtSong={this.state.boughtSong}/>
                     </TabPanel>
                     <TabPanel>
                         <Register/>
@@ -122,7 +123,7 @@ class App extends Component {
             </Card>
             </Container>
             <br />
-            <MusicPlayer fullAudioList={fullAudioList} previewAudioList={previewAudioList} isAvailable={this.state.isAvailable} boughtSong={this.state.boughtSong}/>
+            <MusicPlayer fullAudioList={fullAudioList} isAvailable={this.state.isAvailable} boughtSong={this.state.boughtSong}/>
         </div>
         );
     }
