@@ -57,8 +57,22 @@ export default class MusicList extends Component {
             tableHead.push(<th key="thPurchase">Purchase</th>)
         }
         let tableBody = this.buildtable();
+        let image;
+        if(this.props.songList.length !== 0){
+            image = this.props.songList[0].cover;
+        }
         return (
             <div>
+                <img
+                    src={image}
+                    alt="new"
+                    style={{
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        width: '50%',
+                    }}
+                />
+                <br/>
                 <Table dark stripped={"true"} hover borderless
                     style={{
                         backgroundColor: "rgba(0, 0, 0, .3)"

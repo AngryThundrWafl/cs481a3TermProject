@@ -124,6 +124,7 @@ class App extends Component {
                         backgroundColor: "rgba(0, 0, 0, .4)",
                         color: "white",
                         borderColor: "rgb(49, 194, 124)",
+                        overflow: 'auto',
                     }}>
                         <Tabs>
                             <TabList>
